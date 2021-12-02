@@ -38,6 +38,14 @@ class CategoriesController < ApplicationController
     @articles = @category.articles.paginate(page: params[:page], per_page: 5)
   end
 
+  def destroy
+    @category = Category.find(params[:id])
+    @category.destroy
+    session[:category_id] = nil if (logged_in? && current_user.admin?)
+    flash[:notice] = "The foolowing category is successfully deleted : #{@category.name}"   
+    redirect_to categories_path
+  end
+
   private
 
   def category_params
